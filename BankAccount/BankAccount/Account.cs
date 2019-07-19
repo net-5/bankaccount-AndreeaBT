@@ -2,62 +2,78 @@
 
 namespace BankAccount
 {
-    public enum AccountStatusOne
+    public enum AccountStatus
     {
         Open,
         Closed
     }
-    class Account
+   
+    public class Account
     {
 
-        public AccountStatusOne StatusOne { get; set; }
-        public string OwnerOne { get; set; }
-        public decimal BalanceOne { get; set; }
+        public AccountStatus StatusOwner { get; set; }
+        public AccountStatus StatusNonExisting { get; set; }
+        public string Owner { get; set; }
+        public string NonExistingClient { get; set; }
+        public decimal Balance { get; set; }
        
-        public Account (string ownerOne, decimal balanceOne)
+        public Account (string owner, string nonExistent, decimal balance)
         {
-            OwnerOne = ownerOne;
-            BalanceOne = balanceOne;
-            StatusOne = AccountStatusOne.Open;
+            Owner = owner;
+            Balance = balance;
+            NonExistingClient = nonExistent;
+            //NonExistingClient = AccountStatus.Closed.ToString();
+            this.StatusOwner = AccountStatus.Open;
+            this.StatusNonExisting = AccountStatus.Closed;
         }
       
-        public void Deposit(decimal amount)
+        public void DepositNonExisting(AccountStatus status)
         {
-            if (StatusOne == AccountStatusOne.Closed)
+            
+            if (StatusNonExisting == AccountStatus.Closed)
             {
-                Console.WriteLine($"Your transaction is denied");
+                Console.WriteLine("The account is closed. Your transaction is denied");
                 return;
             }
-            else if (StatusOne == AccountStatusOne.Open)
+            
+        }
+        public void DepositOwner(decimal amount)
+        {
+            if (StatusOwner == AccountStatus.Open)
             {
-                BalanceOne += amount;
+                Balance += amount;
                 Console.WriteLine($"The amount of {amount} $ has been alocated to your account.");
                 return;
             }
         }
-        public void WithdrawalOne(decimal withdrawalAmountOne)
+       public void WithdrawalNonExisting(AccountStatus statusB)
+       {
+            if (StatusNonExisting == AccountStatus.Closed)
+            {
+                Console.WriteLine("The account is closed. Your transaction is denied");
+                return;
+            }
+        }
+       
+        public void Withdrawal(decimal withdrawalAmount)
         {
-            if(StatusOne == AccountStatusOne.Closed)
+           
+            if (StatusOwner == AccountStatus.Open && Balance > withdrawalAmount)
             {
-                Console.WriteLine("Your transaction is denied");
+                Balance -= withdrawalAmount;
+                Console.WriteLine($"The amount {withdrawalAmount} has been withdrawn from your account.");
                 return;
             }
-            else if (StatusOne == AccountStatusOne.Open && BalanceOne > withdrawalAmountOne)
+            if (StatusOwner == AccountStatus.Open && Balance < withdrawalAmount)
             {
-                BalanceOne -= withdrawalAmountOne;
-                Console.WriteLine($"The amount {withdrawalAmountOne} has been withdrawn from your account.");
-                return;
-            }
-            else if (BalanceOne < withdrawalAmountOne)
-            {
-                BalanceOne -= withdrawalAmountOne;
+                Balance -= withdrawalAmount;
 
-                Console.WriteLine($"Insufficient funds.You tried to withdraw {withdrawalAmountOne} from current {BalanceOne}");
+                Console.WriteLine($"Insufficient funds.You tried to withdraw {withdrawalAmount} from current {Balance}");
                 return;
             }
-            else if (withdrawalAmountOne > 1000)
+            else /*if (withdrawalAmount > 1000)*/
             {
-                BalanceOne -= withdrawalAmountOne;
+                Balance -= withdrawalAmount;
 
                 Console.WriteLine("Withdrawal limit exceeded");
                 return;
