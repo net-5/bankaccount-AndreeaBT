@@ -22,14 +22,12 @@ namespace BankAccount
             Owner = owner;
             Balance = balance;
             NonExistingClient = nonExistent;
-            //NonExistingClient = AccountStatus.Closed.ToString();
-            this.StatusOwner = AccountStatus.Open;
-            this.StatusNonExisting = AccountStatus.Closed;
+           
         }
       
-        public void DepositNonExisting(AccountStatus status)
+        public void DepositNonExisting()
         {
-            
+            StatusNonExisting = AccountStatus.Closed;
             if (StatusNonExisting == AccountStatus.Closed)
             {
                 Console.WriteLine("The account is closed. Your transaction is denied");
@@ -39,6 +37,7 @@ namespace BankAccount
         }
         public void DepositOwner(decimal amount)
         {
+            StatusOwner = AccountStatus.Open;
             if (StatusOwner == AccountStatus.Open)
             {
                 Balance += amount;
@@ -46,8 +45,9 @@ namespace BankAccount
                 return;
             }
         }
-       public void WithdrawalNonExisting(AccountStatus statusB)
+       public void WithdrawalNonExisting()
        {
+            StatusNonExisting = AccountStatus.Closed;
             if (StatusNonExisting == AccountStatus.Closed)
             {
                 Console.WriteLine("The account is closed. Your transaction is denied");
